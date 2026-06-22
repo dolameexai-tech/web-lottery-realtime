@@ -5,7 +5,15 @@ const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const DB_PATH = path.join(__dirname, 'database.json');
+// Automatically detect if a Render persistent disk is mounted at /var/data
+const DB_DIR = fs.existsSync('/var/data') ? '/var/data' : __dirname;
+const DB_PATH = path.join(DB_DIR, 'database.json');
+
+// Initialize database file if it doesn't exist in the target directory
+if (!fs.existsSync(DB_PATH)) {
+  fs.writeFileSync(DB_PATH, JSON.stringify({ lao: [], thai: [] }, null, 2), 'utf8');
+}
+
 const ADMIN_ACCESS_KEY = 'admin123'; // Simple access key for demo
 
 app.use(cors());
