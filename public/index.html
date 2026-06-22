@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="lo">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ເວັບໄຊ້ ລາຍງານຜົນຫວຍລາວ ແລະ ຫວຍໄທ ແບບ Real-time ພ້ອມບໍລິການ API ຟຣີສຳລັບນັກພັດທະນາ">
+  <title>Lotto Hub - ລະບົບແຈ້ງຜົນຫວຍ ແລະ API Real-time</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Lao:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Ambient background glow elements -->
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+  <div class="bg-glow bg-glow-3"></div>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header class="main-header">
+      <div class="header-logo">
+        <i class="fa-solid fa-square-poll-vertical logo-icon"></i>
+        <div>
+          <h1>LOTTO HUB</h1>
+          <p>ລະບົບລາຍງານຜົນຫວຍ ລາວ-ໄທ & API Real-time</p>
+        </div>
+      </div>
+      <div class="live-status-container">
+        <span id="live-indicator" class="live-indicator offline">
+          <span class="indicator-dot"></span>
+          <span class="indicator-text">ກຳລັງເຊື່ອມຕໍ່...</span>
+        </span>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="tab-btn active" data-tab="latest">
+        <i class="fa-solid fa-trophy"></i> ຜົນຫວຍຫຼ້າສຸດ
+      </button>
+      <button class="tab-btn" data-tab="history">
+        <i class="fa-solid fa-clock-rotate-left"></i> ປະຫວັດຍ້ອນຫຼັງ
+      </button>
+      <button class="tab-btn" data-tab="api">
+        <i class="fa-solid fa-code"></i> API ສຳລັບນັກພັດທະນາ
+      </button>
+      <button class="tab-btn" data-tab="admin">
+        <i class="fa-solid fa-lock"></i> ຈັດການຜົນຫວຍ
+      </button>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- TAB 1: LATEST RESULTS -->
+      <section id="tab-latest" class="tab-section active">
+        <div class="results-grid">
+          
+          <!-- Lao Lottery Card -->
+          <div class="lottery-card lao-theme">
+            <div class="card-header">
+              <div class="lottery-title">
+                <span class="flag-icon flag-lao"></span>
+                <h2>ຫວຍພັດທະນາ (ຫວຍລາວ)</h2>
+              </div>
+              <div class="draw-meta">
+                <span id="lao-draw-num" class="meta-badge">ງວດທີ --</span>
+                <span id="lao-draw-date" class="meta-date">ວັນທີ --/--/----</span>
+              </div>
+            </div>
+            
+            <div class="card-body">
+              <p class="section-label">ຜົນການອອກເລກ 6 ໂຕ</p>
+              <div class="lao-numbers" id="lao-numbers-container">
+                <div class="number-circle">-</div>
+                <div class="number-circle">-</div>
+                <div class="number-circle">-</div>
+                <div class="number-circle">-</div>
+                <div class="number-circle">-</div>
+                <div class="number-circle">-</div>
+              </div>
+              
+              <div class="lao-breakdown">
+                <div class="breakdown-item">
+                  <span class="lbl">ເລກ 5 ໂຕ</span>
+                  <span class="val" id="lao-5-digits">-----</span>
+                </div>
+                <div class="breakdown-item">
+                  <span class="lbl">ເລກ 4 ໂຕ</span>
+                  <span class="val" id="lao-4-digits">----</span>
+                </div>
+                <div class="breakdown-item">
+                  <span class="lbl">ເລກ 3 ໂຕ</span>
+                  <span class="val" id="lao-3-digits">---</span>
+                </div>
+                <div class="breakdown-item">
+                  <span class="lbl">ເລກ 2 ໂຕ</span>
+                  <span class="val" id="lao-2-digits">--</span>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <span class="draw-schedule"><i class="fa-solid fa-calendar-days"></i> ອອກລາງວັນ ທຸກວັນຈັນ ຫາ ວັນສຸກ (5 ມື້/ອາທິດ)</span>
+            </div>
+          </div>
+          
+          <!-- Thai Lottery Card -->
+          <div class="lottery-card thai-theme">
+            <div class="card-header">
+              <div class="lottery-title">
+                <span class="flag-icon flag-thai"></span>
+                <h2>ສະຫຼາກກິນແບ່ງລັດຖະບານ (ຫວຍໄທ)</h2>
+              </div>
+              <div class="draw-meta">
+                <span id="thai-draw-date" class="meta-date">ວັນທີ --/--/----</span>
+              </div>
+            </div>
+            
+            <div class="card-body">
+              <!-- First Prize -->
+              <div class="thai-primary-result">
+                <p class="section-label">ລາງວັນທີ 1</p>
+                <div class="thai-first-prize" id="thai-first-prize">------</div>
+              </div>
+              
+              <!-- Sub Prizes Grid -->
+              <div class="thai-sub-results">
+                <div class="sub-prize-card">
+                  <span class="sub-title">ເລກທ້າຍ 2 ໂຕ</span>
+                  <span class="sub-value" id="thai-last-two">--</span>
+                </div>
+                
+                <div class="sub-prize-card">
+                  <span class="sub-title">ເລກໜ້າ 3 ໂຕ</span>
+                  <div class="sub-multi-value" id="thai-front-three">
+                    <span>---</span>
+                    <span>---</span>
+                  </div>
+                </div>
+                
+                <div class="sub-prize-card">
+                  <span class="sub-title">ເລກທ້າຍ 3 ໂຕ</span>
+                  <div class="sub-multi-value" id="thai-last-three">
+                    <span>---</span>
+                    <span>---</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="card-footer">
+              <span class="draw-schedule"><i class="fa-solid fa-calendar-days"></i> ອອກລາງວັນ ທຸກວັນທີ 1 ແລະ 16 ຂອງເດືອນ</span>
+            </div>
+          </div>
+          
+        </div>
+      </section>
+
+      <!-- TAB 2: DRAW HISTORY -->
+      <section id="tab-history" class="tab-section">
+        <div class="history-controls">
+          <button class="history-filter-btn active" data-filter="all">ທັງໝົດ</button>
+          <button class="history-filter-btn" data-filter="lao">ຫວຍລາວ</button>
+          <button class="history-filter-btn" data-filter="thai">ຫວຍໄທ</button>
+        </div>
+        
+        <div class="history-container">
+          <!-- Lao History Table -->
+          <div class="history-table-wrapper" id="history-lao-wrapper">
+            <h3>ປະຫວັດຫວຍພັດທະນາ (ລາວ)</h3>
+            <table class="history-table">
+              <thead>
+                <tr>
+                  <th>ງວດທີ</th>
+                  <th>ວັນທີອອກ</th>
+                  <th>ຜົນເລກ 6 ໂຕ</th>
+                  <th>5 ໂຕ</th>
+                  <th>4 ໂຕ</th>
+                  <th>3 ໂຕ</th>
+                  <th>2 ໂຕ</th>
+                </tr>
+              </thead>
+              <tbody id="lao-history-tbody">
+                <!-- Dynamic injected -->
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- Thai History Table -->
+          <div class="history-table-wrapper" id="history-thai-wrapper">
+            <h3>ປະຫວັດສະຫຼາກກິນແບ່ງລັດຖະບານ (ໄທ)</h3>
+            <table class="history-table">
+              <thead>
+                <tr>
+                  <th>ວັນທີອອກ</th>
+                  <th>ລາງວັນທີ 1</th>
+                  <th>ເລກທ້າຍ 2 ໂຕ</th>
+                  <th>ເລກໜ້າ 3 ໂຕ</th>
+                  <th>ເລກທ້າຍ 3 ໂຕ</th>
+                </tr>
+              </thead>
+              <tbody id="thai-history-tbody">
+                <!-- Dynamic injected -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: DEVELOPER API -->
+      <section id="tab-api" class="tab-section">
+        <div class="api-info-panel">
+          <h2><i class="fa-solid fa-laptop-code"></i> ເຊື່ອມຕໍ່ API ຜົນຫວຍ ແບບ Real-time ຟຣີ!</h2>
+          <p>ເວັບໄຊ້ອື່ນໆ ສາມາດດຶງເອົາຜົນຫວຍຫຼ້າສຸດໄປໃຊ້ງານໄດ້ໃນທັນທີ ໂດຍໃຊ້ REST API ຫຼື ຮັບຂໍ້ມູນ Real-time ຜ່ານ Server-Sent Events (SSE) ເມື່ອມີການກົດແຈ້ງຜົນ.</p>
+        </div>
+
+        <div class="api-docs-grid">
+          <!-- API Endpoints Docs -->
+          <div class="api-doc-card">
+            <h3>Endpoints ທີ່ເປີດໃຫ້ບໍລິການ</h3>
+            
+            <div class="endpoint-item">
+              <span class="method get">GET</span>
+              <span class="url">/api/results/latest</span>
+              <p class="desc">ດຶງຜົນຫວຍລາວ ແລະ ໄທ ລ້າສຸດ</p>
+            </div>
+            
+            <div class="endpoint-item">
+              <span class="method get">GET</span>
+              <span class="url">/api/results/lao</span>
+              <p class="desc">ດຶງປະຫວັດຜົນຫວຍລາວທັງໝົດ</p>
+            </div>
+
+            <div class="endpoint-item">
+              <span class="method get">GET</span>
+              <span class="url">/api/results/thai</span>
+              <p class="desc">ດຶງປະຫວັດຜົນຫວຍໄທທັງໝົດ</p>
+            </div>
+
+            <div class="endpoint-item">
+              <span class="method sse">SSE</span>
+              <span class="url">/api/stream</span>
+              <p class="desc">ເຊື່ອມຕໍ່ຮັບຂໍ້ມູນຜົນຫວຍແບບ Real-time (Server-Sent Events)</p>
+            </div>
+          </div>
+
+          <!-- Code Snippet Card -->
+          <div class="api-code-card">
+            <div class="code-header">
+              <h3>ຕົວຢ່າງການຂຽນ Code ດຶງຂໍ້ມູນ Real-time (JavaScript)</h3>
+              <button id="btn-copy-code" class="copy-btn"><i class="fa-regular fa-copy"></i> ຄັດລອກ Code</button>
+            </div>
+            <pre><code id="code-snippet">
+// ປ່ຽນ URL ນີ້ໃຫ້ເປັນ Domain ຂອງລະບົບ Lotto Hub ຕົວຈິງຂອງທ່ານ (ເຊັ່ນ: https://lottohub-api.com)
+const LOTTO_API_BASE = window.location.origin;
+
+// 1. ດຶງຂໍ້ມູນຜົນຫວຍລ້າສຸດໃນຄັ້ງທຳອິດ (REST API)
+async function fetchLatestLottery() {
+  try {
+    const response = await fetch(`${LOTTO_API_BASE}/api/results/latest`);
+    const data = await response.json();
+    console.log('Latest Lottery Results:', data);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+}
+
+// 2. ເຊື່ອມຕໍ່ຮັບຜົນຫວຍ Real-time (Server-Sent Events)
+function connectRealtimeStream() {
+  const eventSource = new EventSource(`${LOTTO_API_BASE}/api/stream`);
+
+  eventSource.addEventListener('connected', (event) => {
+    const data = JSON.parse(event.data);
+    console.log('SSE Stream Connected:', data.message);
+  });
+
+  eventSource.addEventListener('update', (event) => {
+    const update = JSON.parse(event.data);
+    console.log('ໄດ້ຮັບຜົນຫວຍໃໝ່ ແບບ Real-time:', update);
+    
+    // ປະຕິບັດການອັບເດດໜ້າເວັບຂອງທ່ານຢູ່ບ່ອນນີ້
+    if (update.type === 'lao') {
+      alert(`ຫວຍລາວງວດທີ ${update.data.drawNumber} ອອກ: ${update.data.numbers.join(' ')}`);
+    } else if (update.type === 'thai') {
+      alert(`ຫວຍໄທ ລາງວັນທີ 1 ອອກ: ${update.data.firstPrize}`);
+    }
+  });
+
+  eventSource.onerror = (error) => {
+    console.error('SSE Error, reconnecting...');
+  };
+}
+
+// ເລີ່ມເຮັດວຽກ
+fetchLatestLottery();
+connectRealtimeStream();
+            </code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: ADMIN PORTAL -->
+      <section id="tab-admin" class="tab-section">
+        <div class="admin-grid">
+          
+          <!-- Access Control Header -->
+          <div class="admin-header-panel">
+            <h2><i class="fa-solid fa-lock-open"></i> ປ້ອນຜົນການອອກລາງວັນ</h2>
+            <div class="input-group inline-auth">
+              <label for="admin-key-input">ລະຫັດ Admin:</label>
+              <input type="password" id="admin-key-input" placeholder="ປ້ອນລະຫັດເພື່ອບັນທຶກຜົນ..." value="admin123">
+              <span class="auth-hint"><i class="fa-solid fa-info-circle"></i> ສຳລັບການສາທິດ ລະຫັດແມ່ນ <code>admin123</code></span>
+            </div>
+          </div>
+
+          <!-- Lao Admin Form -->
+          <div class="admin-form-card lao-form-theme">
+            <div class="card-header">
+              <h3><span class="flag-icon flag-lao"></span> ແຈ້ງຜົນຫວຍພັດທະນາ (ລາວ)</h3>
+            </div>
+            <form id="lao-admin-form" class="admin-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="lao-draw">ງວດທີ: <span class="req">*</span></label>
+                  <input type="text" id="lao-draw" required placeholder="ຕົວຢ່າງ: 55">
+                </div>
+                <div class="form-group">
+                  <label for="lao-date">ວັນທີອອກ: <span class="req">*</span></label>
+                  <input type="date" id="lao-date" required>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label>ຜົນເລກ 6 ຕົວ: <span class="req">*</span></label>
+                <div class="numbers-input-row">
+                  <input type="text" maxlength="1" class="lao-num-in" required placeholder="0" pattern="[0-9]" inputmode="numeric">
+                  <input type="text" maxlength="1" class="lao-num-in" required placeholder="0" pattern="[0-9]" inputmode="numeric">
+                  <input type="text" maxlength="1" class="lao-num-in" required placeholder="0" pattern="[0-9]" inputmode="numeric">
+                  <input type="text" maxlength="1" class="lao-num-in" required placeholder="0" pattern="[0-9]" inputmode="numeric">
+                  <input type="text" maxlength="1" class="lao-num-in" required placeholder="0" pattern="[0-9]" inputmode="numeric">
+                  <input type="text" maxlength="1" class="lao-num-in" required placeholder="0" pattern="[0-9]" inputmode="numeric">
+                </div>
+                <small class="helper-text">ປ້ອນຕົວເລກ 0-9 ໃສ່ແຕ່ລະຫ້ອງ</small>
+              </div>
+              
+              <button type="submit" class="submit-btn"><i class="fa-solid fa-paper-plane"></i> ປະກາດຜົນຫວຍລາວ ແບບ Real-time</button>
+            </form>
+          </div>
+
+          <!-- Thai Admin Form -->
+          <div class="admin-form-card thai-form-theme">
+            <div class="card-header">
+              <h3><span class="flag-icon flag-thai"></span> ແຈ້ງຜົນສະຫຼາກກິນແບ່ງ (ຫວຍໄທ)</h3>
+            </div>
+            <form id="thai-admin-form" class="admin-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="thai-date">ວັນທີອອກ: <span class="req">*</span></label>
+                  <input type="date" id="thai-date" required>
+                </div>
+                <div class="form-group">
+                  <label for="thai-last2">ເລກທ້າຍ 2 ໂຕ: <span class="req">*</span></label>
+                  <input type="text" id="thai-last2" required maxlength="2" pattern="[0-9]{2}" placeholder="ຕົວຢ່າງ: 64" inputmode="numeric">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="thai-first">ລາງວັນທີ 1 (6 ຫຼັກ): <span class="req">*</span></label>
+                <input type="text" id="thai-first" required maxlength="6" pattern="[0-9]{6}" placeholder="ຕົວຢ່າງ: 850384" class="full-width-input" inputmode="numeric">
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label>ເລກໜ້າ 3 ໂຕ (2 ລາງວັນ): <span class="req">*</span></label>
+                  <div class="multi-input">
+                    <input type="text" id="thai-front-1" required maxlength="3" pattern="[0-9]{3}" placeholder="307" inputmode="numeric">
+                    <input type="text" id="thai-front-2" required maxlength="3" pattern="[0-9]{3}" placeholder="412" inputmode="numeric">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>ເລກທ້າຍ 3 ໂຕ (2 ລາງວັນ): <span class="req">*</span></label>
+                  <div class="multi-input">
+                    <input type="text" id="thai-last-1" required maxlength="3" pattern="[0-9]{3}" placeholder="560" inputmode="numeric">
+                    <input type="text" id="thai-last-2" required maxlength="3" pattern="[0-9]{3}" placeholder="901" inputmode="numeric">
+                  </div>
+                </div>
+              </div>
+
+              <button type="submit" class="submit-btn"><i class="fa-solid fa-paper-plane"></i> ປະກາດຜົນຫວຍໄທ ແບບ Real-time</button>
+            </form>
+          </div>
+          
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+      <p>&copy; 2026 LOTTO HUB. ພັດທະນາໂດຍ ລະບົບ API ແຈ້ງຜົນຫວຍສົດ ຕະຫຼອດ 24 ຊົ່ວໂມງ.</p>
+    </footer>
+  </div>
+
+  <!-- Toast Notification System -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Custom JS -->
+  <script src="app.js"></script>
+</body>
+</html>
